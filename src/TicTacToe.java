@@ -12,19 +12,15 @@ import java.util.Scanner;
 
 public class TicTacToe {
     public static void main(String[] args) {
-        initGameField();
-        while (true) {
-            movePlayer();
-            moveAsus();
-        }
+        playTicTacToe();
     }
 
     //variables
     public static char emptyField = '-';
-    public static char moveX = 'X';
-    public static char moveO = 'O';
-    public static char moveStar = '*';
-    public static char movePLUS = '+';
+    public static char signX = 'X';
+    public static char signO = 'O';
+    public static char signStar = '*';
+    public static char signPLUS = '+';
 
     public static int px;
     public static int py;
@@ -35,6 +31,17 @@ public class TicTacToe {
     public static Random rand = new Random();
 
     //voids
+
+    static void playTicTacToe() {
+        initGameField();
+        while (true) {
+            movePlayer();
+            moveAsus();
+//            moveMac();
+//            moveAcer();
+        }
+    }
+
     static void initGameField() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Введите размер игрового поля (от 3 до 5): ");
@@ -76,10 +83,10 @@ public class TicTacToe {
             System.out.println("Введите координату Y: ");
             py = scan.nextInt() - 1;
         } while (!isCellValid(px, py));
-        gameField[py][px] = moveX;
+        gameField[py][px] = signX;
         makeGameField();
-        isWinOn();
-        isDrawOn();
+        checkMove(signX, "МОЛОДЕЦ!");
+
     }
 
     static void moveAsus() {
@@ -87,9 +94,29 @@ public class TicTacToe {
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
         } while (!isCellValidAsus(px, py));
-        gameField[py][px] = moveO;
+        gameField[py][px] = signO;
         makeGameField();
-        isDrawOn();
+        checkMove(signO, "ASUS WIN!");
+    }
+
+    static void moveMac() {
+        do {
+            px = rand.nextInt(SIZE);
+            py = rand.nextInt(SIZE);
+        } while (!isCellValidAsus(px, py));
+        gameField[py][px] = signStar;
+        makeGameField();
+        checkMove(signStar, "Mac WIN!");
+    }
+
+    static void moveAcer() {
+        do {
+            px = rand.nextInt(SIZE);
+            py = rand.nextInt(SIZE);
+        } while (!isCellValidAsus(px, py));
+        gameField[py][px] = signPLUS;
+        makeGameField();
+        checkMove(signPLUS, "Acer WIN!");
     }
 
     public static boolean isCellValid(int px, int py) {
@@ -114,7 +141,11 @@ public class TicTacToe {
         return false;
     }
 
-    public static void isDrawOn() {
+    public static void checkMove(char sign, String winMessage) {
+        if (isWin(sign)) {
+            System.out.println(winMessage);
+            System.exit(0);
+        }
         if (isDraw()) {
             System.out.println("Победила дружба!");
             System.exit(0);
@@ -132,35 +163,27 @@ public class TicTacToe {
         return true;
     }
 
-    public static void isWinOn() {
-        if (isWin(moveX)) {
-            System.out.println("Ты победил!");
-            System.exit(0);
-        }
-    }
-
     public static boolean isWin(char sign) {
-        int vertical = 0;
-        int horizontal = 0;
+        boolean vertical;
+        boolean horizontal;
         int diagonal13 = 0;
         int diagonal31 = 0;
-
         for (int i = 0; i < SIZE; i++) {
+            vertical = true;
+            horizontal = true;
             if (gameField[i][i] == sign)
                 diagonal13++;
             if (gameField[i][SIZE - 1 - i] == sign)
                 diagonal31++;
-
-//            for (int j = 0; j < SIZE; j++) {
-//                if (gameField[i][j] == sign)
-//                    horizontal++;
-//                if (gameField[i][j] == sign)
-//                    vertical++;
-            if (diagonal13 == SIZE || diagonal31 == SIZE)
+            for (int j = 0; j < SIZE; j++) {
+                horizontal &= (gameField[i][j] == sign);
+                vertical &= (gameField[j][i] == sign);
+            }
+            if (diagonal13 == SIZE || diagonal31 == SIZE || vertical || horizontal)
                 return true;
         }
-
         return false;
     }
 }
+
 
