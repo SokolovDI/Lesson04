@@ -82,7 +82,7 @@ public class TicTacToe {
             px = scan.nextInt() - 1;
             System.out.println("Введите координату Y: ");
             py = scan.nextInt() - 1;
-        } while (!isCellValid(px, py));
+        } while (!isCellValid(px, py, "Введены не верные координаты\n", "\nЗанято! Введите другие координаты\n"));
         gameField[py][px] = signX;
         makeGameField();
         checkMove(signX, "МОЛОДЕЦ!");
@@ -90,10 +90,11 @@ public class TicTacToe {
     }
 
     static void moveAsus() {
+
         do {
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
-        } while (!isCellValidAsus(px, py));
+        } while (!isCellValid(px, py, "", ""));
         gameField[py][px] = signO;
         makeGameField();
         checkMove(signO, "ASUS WIN!");
@@ -101,9 +102,10 @@ public class TicTacToe {
 
     static void moveMac() {
         do {
+
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
-        } while (!isCellValidAsus(px, py));
+        } while (!isCellValid(px, py, "", ""));
         gameField[py][px] = signStar;
         makeGameField();
         checkMove(signStar, "Mac WIN!");
@@ -113,31 +115,21 @@ public class TicTacToe {
         do {
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
-        } while (!isCellValidAsus(px, py));
+        } while (!isCellValid(px, py, "", ""));
         gameField[py][px] = signPLUS;
         makeGameField();
         checkMove(signPLUS, "Acer WIN!");
     }
 
-    public static boolean isCellValid(int px, int py) {
+    public static boolean isCellValid(int px, int py, String wrongCoord, String occupied) {
         if (px < 0 || px >= SIZE || py < 0 || py >= SIZE) {
-            System.out.println("Введены не верные координаты. Введите другие координаты");
+            System.out.print(wrongCoord);
             return false;
         }
         if (gameField[py][px] == emptyField) {
             return true;
         }
-        System.out.println("Занято. Введите другие координаты");
-        return false;
-    }
-
-    public static boolean isCellValidAsus(int px, int py) {
-        if (px < 0 || px >= SIZE || py < 0 || py >= SIZE) {
-            return false;
-        }
-        if (gameField[py][px] == emptyField) {
-            return true;
-        }
+        System.out.print(occupied);
         return false;
     }
 
