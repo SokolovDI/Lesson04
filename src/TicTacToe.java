@@ -22,12 +22,9 @@ public class TicTacToe {
     public static char signStar = '*';
     public static char signPLUS = '+';
 
-    public static int px;
-    public static int py;
 
     public static int SIZE;
     public static char[][] gameField;
-
     public static Random rand = new Random();
 
     //voids
@@ -35,7 +32,7 @@ public class TicTacToe {
     static void playTicTacToe() {
         initGameField();
         while (true) {
-            movePlayer();
+            movesignX();
             moveAsus();
 //            moveMac();
 //            moveAcer();
@@ -75,7 +72,9 @@ public class TicTacToe {
         System.out.println();
     }
 
-    static void movePlayer() {
+    static void movesignX() {
+        int px;
+        int py;
         Scanner scan = new Scanner(System.in);
         do {
             System.out.println("Введите координату X: ");
@@ -90,19 +89,96 @@ public class TicTacToe {
     }
 
     static void moveAsus() {
+        int px;
+        int py;
+        int horizontal;
+        int hEmp;
+        int vertical;
+        int vEmp;
+        int diagonal13 = 0;
+        int diagonal13Emp = 0;
+        int diagonal31 = 0;
+        int diagonal31Emp = 0;
 
+        for (int i = 0; i < SIZE; i++) {
+            horizontal = 0;
+            hEmp = 0;
+            vertical = 0;
+            vEmp = 0;
+            for (int j = 0; j < SIZE; j++) {
+
+                if (gameField[j][i] == signX) vertical++;
+                else if (gameField[j][i] == emptyField) vEmp++;
+                if ((vertical == SIZE - 1) && (vEmp == 1)) {
+                    for (int k = 0; k < SIZE; k++) {
+                        if (gameField[k][i] == emptyField) {
+                            gameField[k][i] = signO;
+                            makeGameField();
+                            checkMove(signO, "ASUS WIN!");
+                            return;
+                        }
+                    }
+                }
+
+                if (gameField[i][j] == signX) horizontal++;
+                else if (gameField[i][j] == emptyField) hEmp++;
+                if ((horizontal == SIZE - 1) && (hEmp == 1)) {
+                    for (int k = 0; k < SIZE; k++) {
+                        if (gameField[i][k] == emptyField) {
+                            gameField[i][k] = signO;
+                            makeGameField();
+                            checkMove(signO, "ASUS WIN!");
+                            return;
+                        }
+                    }
+                }
+
+            }
+
+            if (gameField[i][i] == signX) diagonal13++;
+            else if (gameField[i][i] == emptyField) diagonal13Emp++;
+            if ((diagonal13 == SIZE - 1) && (diagonal13Emp == 1)) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (gameField[j][j] == emptyField) {
+                        gameField[j][j] = signO;
+                        makeGameField();
+                        checkMove(signO, "ASUS WIN!");
+                        return;
+                    }
+                }
+            }
+
+            if (gameField[i][SIZE - 1 - i] == signX)
+                diagonal31++;
+            else if (gameField[i][SIZE - 1 - i] == emptyField)
+                diagonal31Emp++;
+            if ((diagonal31 == SIZE - 1) && (diagonal31Emp == 1)) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (gameField[j][SIZE - 1 - j] == emptyField) {
+                        px = j;
+                        py = (SIZE - 1 - j);
+                        gameField[px][py] = signO;
+                        makeGameField();
+                        checkMove(signO, "ASUS WIN!");
+                        return;
+                    }
+                }
+            }
+        }
         do {
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
-        } while (!isCellValid(px, py, "", ""));
-        gameField[py][px] = signO;
+        }
+        while (!isCellValid(px, py, "", ""));
+        gameField[px][py] = signO;
         makeGameField();
         checkMove(signO, "ASUS WIN!");
     }
 
     static void moveMac() {
+        int px;
+        int py;
         do {
-
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
         } while (!isCellValid(px, py, "", ""));
@@ -112,6 +188,8 @@ public class TicTacToe {
     }
 
     static void moveAcer() {
+        int px;
+        int py;
         do {
             px = rand.nextInt(SIZE);
             py = rand.nextInt(SIZE);
@@ -178,4 +256,5 @@ public class TicTacToe {
     }
 }
 
+        
 
